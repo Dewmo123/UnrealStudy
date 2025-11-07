@@ -18,31 +18,36 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 protected:
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UStaticMeshComponent> BodyMesh;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UStaticMeshComponent> WingMesh;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MovementSpeed = 50.0f;
-	UPROPERTY(EditAnywhere,Category=Target)
-	TObjectPtr<AActor>TargetActor;
 
-	UPROPERTY(EditAnyWhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = Target)
+	TObjectPtr<AActor> TargetActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RotationRate = 45.0f;
 
 protected:
 	UPROPERTY()
 	class UA1Object* Obj;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-	int32 HP = 100;
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	int32 MP = 50;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 Hp = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int32 Mp = 50;
+
 	float Speed = 3.5f;
 };

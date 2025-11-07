@@ -15,16 +15,19 @@ AA1Actor::AA1Actor()
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
 	SetRootComponent(BodyMesh);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> BodyMeshAsset(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Props/SM_Statue.SM_Statue'"));
-	if (BodyMeshAsset.Succeeded()) {
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> BodyMeshAsset(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
+	if (BodyMeshAsset.Succeeded())
+	{
 		BodyMesh->SetStaticMesh(BodyMeshAsset.Object);
 	}
+
 	WingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WingMesh"));
-	WingMesh->SetupAttachment(GetRootComponent());
+	WingMesh->SetupAttachment(BodyMesh);
 	WingMesh->SetRelativeScale3D(FVector(0.5f, 5.0f, 0.2f));
 	WingMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
 
-	if (BodyMeshAsset.Succeeded()) {
+	if (BodyMeshAsset.Succeeded())
+	{
 		WingMesh->SetStaticMesh(BodyMeshAsset.Object);
 	}
 }
@@ -33,9 +36,11 @@ AA1Actor::AA1Actor()
 void AA1Actor::BeginPlay()
 {
 	Super::BeginPlay();
+
 	TArray<AActor*> Actors;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("A1Target"),OUT Actors);
-	if (Actors.Num() > 0) {
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("A1Target"), OUT Actors);
+	if (Actors.Num() > 0)
+	{
 		TargetActor = Actors[0];
 	}
 }
@@ -50,14 +55,19 @@ void AA1Actor::Tick(float DeltaTime)
 	//SetActorLocation(NewLocation);
 
 	//AddActorWorldOffset(FVector::ForwardVector * MovementSpeed * DeltaTime);
-	//if (TargetActor) {
-	//	FVector Direction = TargetActor->GetActorLocation() - GetActorLocation();
-	//	Direction.Normalize();
-	//	AddActorWorldOffset(Direction * MovementSpeed * DeltaTime);
-	////}
-	//FRotator Rot = GetActorRotation();
-	//Rot.Yaw *= RotationRate * DeltaTime;
-	//SetActorRotation(Rot);
+
+	if (TargetActor)
+	{
+		FVector Direction = TargetActor->GetActorLocation() - GetActorLocation();
+
+		AddActorWorldOffset(Direction.GetSafeNormal() * MovementSpeed * DeltaTime);
+	}
+
+	// È¸Àü
+	//FRotator Rotation = GetActorRotation();
+	//FRotator NewRotation = FRotator(Rotation.Pitch, Rotation.Yaw * RotationRate * DeltaTime, Rotation.Roll);
+	//SetActorRotation(NewRotation);
+
 	AddActorWorldRotation(FRotator(0.0f, RotationRate * DeltaTime, 0.0f));
 }
 
